@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 credentials.json
 token.json
 app.yaml
+.vercel

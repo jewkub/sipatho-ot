@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read ddthe documentation</p>
+<script lang="ts">
+	// import { Container } from 'sveltestrap'
+</script>
+
+<svelte:head>
+	<title>OT Online</title>
+	<meta name="description" content="OT Online" />
+</svelte:head>
+
+<h1 class="text-3xl font-bold my-10 text-center">
+	ระบบเบิกค่าตอบแทนนอกเวลา
+</h1>
+<div class="flex justify-center">
+	<a href="form" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 transition text-white rounded-md text-lg">กรอกฟอร์ม</a>
+</div>

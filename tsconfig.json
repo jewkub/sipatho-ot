@@ -9,8 +9,13 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
-	}
+
+		"allowImportingTsExtensions": true,
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext"
+		// https://github.com/orgs/vercel/discussions/3986#discussioncomment-7926025
+		// https://github.com/vercel/vercel/issues/8680
+	},
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

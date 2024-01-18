@@ -6,6 +6,11 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended',
 		'plugin:svelte/recommended'
 	],
+	rules: {
+		'no-unused-vars': 'warn',
+		'prefer-const': 'warn',
+		'@typescript-eslint/no-unused-vars': 'warn'
+	},
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],
 	parserOptions: {
