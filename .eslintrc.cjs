@@ -9,7 +9,8 @@ module.exports = {
 	rules: {
 		'no-unused-vars': 'warn',
 		'prefer-const': 'warn',
-		'@typescript-eslint/no-unused-vars': 'warn'
+		'@typescript-eslint/no-unused-vars': 'warn',
+		'no-warning-comments': 'warn',
 	},
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],

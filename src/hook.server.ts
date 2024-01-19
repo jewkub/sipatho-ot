@@ -2,7 +2,7 @@ import { METADATA_SHEET } from '$env/static/private'
 import authorize from '$lib/server/auth.ts';
 import { google } from 'googleapis';
 const auth = await authorize();
-const sheets = google.sheets({ version: 'v4', auth }).spreadsheets.values;
+export const sheets = google.sheets({ version: 'v4', auth }).spreadsheets.values;
 import { roomList } from '$lib/roomList.ts';
 
 const metadata = (await sheets.get({
@@ -17,7 +17,11 @@ if (![
   metadata['Weekday - sheetname'],
   metadata['Weekend - spreadsheet'],
   metadata['Weekend - sheetname'],
+  metadata['Response - spreadsheet'],
+  metadata['Response - sheetname'],
 ].every(e => e?.length)) throw 'missing some metadata'
+export const responseSpreadsheet = metadata['Response - spreadsheet']
+export const responseSheetname = metadata['Response - sheetname']
 
 type NameMap = { [k: string]: [string, string] }
 type Person = [string, string] | null

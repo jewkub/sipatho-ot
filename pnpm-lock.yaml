@@ -18,6 +18,9 @@ dependencies:
   googleapis:
     specifier: ^130.0.0
     version: 130.0.0
+  qs:
+    specifier: ^6.11.2
+    version: 6.11.2
 
 devDependencies:
   '@playwright/test':
@@ -38,6 +41,9 @@ devDependencies:
   '@types/eslint':
     specifier: ^8.56.2
     version: 8.56.2
+  '@types/qs':
+    specifier: ^6.9.11
+    version: 6.9.11
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.0.0
     version: 6.18.1(@typescript-eslint/parser@6.18.1)(eslint@8.56.0)(typescript@5.3.3)
@@ -809,6 +815,10 @@ packages:
 
   /@types/pug@2.0.10:
     resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
+    dev: true
+
+  /@types/qs@6.9.11:
+    resolution: {integrity: sha512-oGk0gmhnEJK4Yyk+oI7EfXsLayXatCWPHary1MtcmbAifkobT9cM9yutG/hZKIseOU0MqbIwQ/u2nn/Gb+ltuQ==}
     dev: true
 
   /@types/semver@7.5.6:

@@ -2,16 +2,8 @@
   import { onMount } from 'svelte'
   import type { Data } from '../api/+server.ts'
   import { roomList } from '$lib/roomList.ts'
-  const CalculateTimeDiff = (start: string, end: string) => {
-    const startHr = parseInt(start.slice(0, -3))
-    const endHr = parseInt(end.slice(0, -3))
-    const start30 = parseInt(start.at(-2)!) === 3
-    const end30 = parseInt(end.at(-2)!) === 3
-    if (endHr < startHr) throw 'time range invalid'
-    if (endHr === startHr && !end30 && start30) throw 'time range invalid'
-    const resultHr = endHr - startHr - (!end30 && start30 ? 1 : 0)
-    return `${resultHr ? resultHr + ' ชั่วโมง' : ''} ${end30 != start30 ? ' 30 นาที' : ''}`
-  }
+  import { CalculateTimeDiff } from '$lib/CalculateTimeDiff.ts'
+
   const handleChangeRoom = () => {
     nameNum = ''
     const roomNum = roomList.map(e => e.name).indexOf(room)
@@ -20,7 +12,7 @@
   }
 
   let data: Data, nameNum: string, room: string
-  let job: { [k: string]: [string, string][] } = {}
+  const job: { [k: string]: [string, string][] } = {}
   let startTime: string, endTime: string
   let workList: string[] = []
   const timeRange = {
@@ -41,7 +33,7 @@
 
     if (data.isWeekend) ({start: startTimeRange, end: endTimeRange} = timeRange.weekend)
     else ({start: startTimeRange, end: endTimeRange} = timeRange.weekday)
-    for (let room in data.job) {
+    for (const room in data.job) {
       job[room] = [...new Map(data.job[room].filter((e): e is [string, string] => e != null))]
     }
 	});
@@ -53,11 +45,11 @@
 </svelte:head>
 
 <!-- <div>{JSON.stringify(data)}</div> -->
-<div class="container px-8 pt-8">
+<div class="container px-6 sm:px-8 pt-6">
   <a href=".." class="underline text-gray-500 hover:text-gray-700">back</a>
-  <div class="mx-auto max-w-7xl py-6 sm:px-6 px-8">
+  <div class="mx-auto py-4 px-4">
     {#if data}
-      <form>
+      <form action="/submit" method="post">
         <div class="space-y-12">
           <div class="border-b border-gray-900/10 pb-12 space-y-4">
             <h2 class="text-xl font-bold text-center mb-8">แบบฟอร์มเบิกค่าตอบแทนนอกเวลา</h2>
@@ -79,7 +71,7 @@
             <div class="space-y-2">
               {#each workList as work, i (work)}
                 <div class="flex items-center space-x-4">
-                  <input type="checkbox" id="work[{i}]" name="work[{i}]" class="rounded text-indigo-600 border-gray-300 w-4 h-4"/>
+                  <input checked={workList.length === 1} type="checkbox" id="work[{i}]" name="work[{i}]" class="duration-100 rounded text-indigo-600 border-gray-300 w-4 h-4"/>
                   <label for="work[{i}]">{work}</label>
                 </div>
               {/each}
@@ -94,6 +86,7 @@
                   {/each}
                 </select>
               </div>
+              <input class="hidden" value={nameNum ? job[room][+nameNum-1][0] : ''} name="fullname"/>
               <div class="flex basis-full sm:basis-40 items-center min-w-0">
                 <label for="sap" class="mr-4 text-gray-900">SAP</label>
                 <input value={nameNum ? job[room]?.at(parseInt(nameNum)-1)?.at(1) : ''} readonly type="text" name="sap" id="sap" class="flex-1 min-w-0 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required/>
@@ -120,18 +113,19 @@
                   {/each}
                 </select>
               </div>
-              <div class="basis-full md:basis-auto">
-                {#if startTime && endTime}
+              {#if startTime && endTime}
+                <div class="basis-full md:basis-auto">
                   <p>รวมเวลา {CalculateTimeDiff(startTime, endTime)}</p>
-                {:else}
-                  <p></p>
-                {/if}
-              </div>
+                </div>
+              {/if}
+            </div>
+            <div class="flex items-center md:w-1/2">
+              <label for="amount" class="mr-4 text-gray-900">ชิ้นงาน</label>
+              <input type="text" name="amount" id="amount" class="transition flex-1 min-w-0 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required/>
             </div>
           </div>
         </div>
         <div class="mt-6 flex items-center justify-end gap-x-6">
-          <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
           <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
         </div>
       </form>
