@@ -9,12 +9,13 @@
     const roomNum = roomList.map(e => e.name).indexOf(room)
     if (roomNum == -1) throw 'invalid room'
     workList = roomList[roomNum].work
+    rateList = roomList[roomNum].rate
   }
 
-  let data: Data, nameNum: string, room: string
+  let data: Data, nameNum: string, room: string, rate: string
   const job: { [k: string]: [string, string][] } = {}
   let startTime: string, endTime: string
-  let workList: string[] = []
+  let workList: string[] = [], rateList: string[] | number[] = []
   const timeRange = {
     weekday: {
       start: ['6.30', '7.00', '7.30', '8.00', '15.00', '15.30', '16.00', '16.30', '17.00'],
@@ -119,9 +120,19 @@
                 </div>
               {/if}
             </div>
-            <div class="flex items-center md:w-1/2">
-              <label for="amount" class="mr-4 text-gray-900">ชิ้นงาน</label>
-              <input type="text" name="amount" id="amount" class="transition flex-1 min-w-0 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required/>
+            <div class="flex flex-wrap gap-4">
+              <div class="flex basis-full items-center sm:flex-1 sm:basis-0">
+                <label for="amount" class="mr-4 text-gray-900">ชิ้นงาน</label>
+                <input type="text" name="amount" id="amount" class="transition flex-1 min-w-0 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required/>
+              </div>
+              <div class="flex basis-full items-center sm:flex-1 sm:basis-0">
+                <label for="rate" class="mr-4 text-gray-900">อัตรา</label>
+                <select disabled={rateList.length == 0} bind:value={rate} name="rate" id="rate" class="flex-1 min-w-0 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                  {#each rateList as e (e)}
+                    <option value={e}>{e}</option>
+                  {/each}
+                </select>
+              </div>
             </div>
           </div>
         </div>

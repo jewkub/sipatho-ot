@@ -62,11 +62,11 @@ const getJob = async (spreadsheetId: string, range: string, personInRoom: number
 export const weekday = await getJob(
   metadata['Weekday - spreadsheet'],
   `${metadata['Weekday - sheetname']}!B3:V`,
-  [2, 1, 7, 1, 2, 0, 4, 0, 0, 2, 0, 1],
+  [2, 1, 7, 1, 2, 0, 4, 0, 0, 2, 0, 0, 1],
 ).catch(() => { throw 'weekday data error' })
 
 export const weekend = await getJob(
   metadata['Weekend - spreadsheet'],
   `${metadata['Weekend - sheetname']}!B3:AB`,
-  [2, 2, 8, 3, 2, 1, 3, 2, 1, 1, 1, 0],
+  [2, 2, 8, 3, 2, 1, 3, 2, 1, 1, 0, 1, 0],
 ).catch(() => { throw 'weekend data error' })

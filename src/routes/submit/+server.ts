@@ -1,5 +1,3 @@
-// import { error } from '@sveltejs/kit';
-// import { TIMEZONE } from '$env/static/private'
 import type { RequestHandler } from './$types.d.ts'
 import { redirect } from '@sveltejs/kit'
 import qs from 'qs'
@@ -37,6 +35,7 @@ export const POST: RequestHandler = async ({ request }) => {
         res.room,
         res.work,
         res.amount,
+        res.rate,
       ]]
     },
   })
