@@ -83,3 +83,8 @@ export const roomList = [
     rate: [150],
   },
 ]
+
+export const personPerRoom = {
+  weekday: [2, 1, 7, 1, 2, 0, 4, 0, 0, 2, 0, 0, 1],
+  weekend: [2, 2, 8, 3, 2, 1, 3, 2, 1, 1, 0, 1, 0],
+}
