@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request }) => {
   if (typeof res.room != 'string') throw 'invalid room data'
   if (typeof res.startTime != 'string' || typeof res.endTime != 'string') throw 'invalid time data'
   const roomNum = roomList.map(e => e.name).indexOf(res.room)
-  res.work = res.work?.map<string>((e, i) => roomList[roomNum].work[i]).filter(e => e).join(', ')
+  res.work = res.work?.map<string>((_, i) => roomList[roomNum].work[i]).filter(e => e).join(', ')
   await sheets.append({
     spreadsheetId: responseSpreadsheet,
     range: `${responseSheetname}!A2:J`,
