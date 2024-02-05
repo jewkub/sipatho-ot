@@ -7,7 +7,16 @@ import { TIMEZONE } from '$env/static/private'
 import { roomList } from '$lib/roomList.ts'
 import { CalculateTimeDiff } from '$lib/CalculateTimeDiff.ts'
 
+const after10pm = () => {
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    hour: 'numeric',
+    timeZone: TIMEZONE,
+  })
+  return +formatter.formatToParts()[0].value >= 22
+}
+
 export const POST: RequestHandler = async ({ request }) => {
+  if (after10pm()) throw 'form closed today'
   const res = qs.parse(await request.text(), { allowSparse: true })
   console.log(res)
   if (res.work !== undefined && !Array.isArray(res.work)) throw 'invalid work checkbox data'

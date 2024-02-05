@@ -7,9 +7,7 @@
 {#if data.validHmac}
   <Form></Form>
 {:else}
-  <div>
-    <h2 class="text-center mt-12 text-xl">
-      ลิงค์ไม่ถูกต้อง กรุณาสแกนใหม่อีกครั้ง
-    </h2>
-  </div>
+  <h2 class="text-center mt-12 text-xl">
+    ลิงค์ไม่ถูกต้อง
+  </h2>
 {/if}
