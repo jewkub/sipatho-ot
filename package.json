@@ -44,8 +44,11 @@
   "type": "module",
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
+    "@googleapis/docs": "^3.0.0",
+    "@googleapis/drive": "^8.7.0",
+    "@googleapis/oauth2": "^1.0.5",
+    "@googleapis/sheets": "^5.0.5",
     "@vercel/edge": "^1.1.1",
-    "googleapis": "^130.0.0",
     "qrcode": "^1.5.3",
     "qs": "^6.11.2"
   },

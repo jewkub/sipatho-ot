@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types.d.ts'
-import type { docs_v1 } from 'googleapis'
+import type { docs_v1 } from '@googleapis/docs'
 import { drive, docs, sheets, responseSpreadsheet, responseOneday, template } from '../../../hook.server.ts'
 import { TIMEZONE } from '$env/static/private'
 

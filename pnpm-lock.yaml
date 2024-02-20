@@ -12,12 +12,21 @@ dependencies:
   '@google-cloud/local-auth':
     specifier: ^3.0.1
     version: 3.0.1
+  '@googleapis/docs':
+    specifier: ^3.0.0
+    version: 3.0.0
+  '@googleapis/drive':
+    specifier: ^8.7.0
+    version: 8.7.0
+  '@googleapis/oauth2':
+    specifier: ^1.0.5
+    version: 1.0.5
+  '@googleapis/sheets':
+    specifier: ^5.0.5
+    version: 5.0.5
   '@vercel/edge':
     specifier: ^1.1.1
     version: 1.1.1
-  googleapis:
-    specifier: ^130.0.0
-    version: 130.0.0
   qrcode:
     specifier: ^1.5.3
     version: 1.5.3
@@ -413,6 +422,46 @@ packages:
       google-auth-library: 9.6.3
       open: 7.4.2
       server-destroy: 1.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@googleapis/docs@3.0.0:
+    resolution: {integrity: sha512-KrzopGTN5P2wkH+a0RtQUoWcuGgrEpMe1DfMb/KbdXPkaTpbR5XxKYtzW7lno/DkYDtrLrhP32XUnmoIIX2XEA==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      googleapis-common: 7.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@googleapis/drive@8.7.0:
+    resolution: {integrity: sha512-XAi6kfySIU4H3ivX2DpzTDce5UhNke5NxEWCL6tySEdcVqx+cmXJmkMqwfOAHJalEB5s9PPfdLBU29Xd5XlLSQ==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      googleapis-common: 7.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@googleapis/oauth2@1.0.5:
+    resolution: {integrity: sha512-nAXO+qbYuBltMXTq3AuZfWmbON5dR5maEIyjGDlWM+qaB2/vmfvU87uEXFK8PpsSxuvM5amWrHI/N+sHErAZ6g==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      googleapis-common: 7.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@googleapis/sheets@5.0.5:
+    resolution: {integrity: sha512-XMoONmgAJm2jYeTYHX4054VcEkElxlgqmnHvt0wAurzEHoGJLdUHhTAJXGPLgSs4WVMPtgU8HLrmk7/U+Qlw7A==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      googleapis-common: 7.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -2609,17 +2658,6 @@ packages:
       qs: 6.11.2
       url-template: 2.0.8
       uuid: 9.0.1
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-
-  /googleapis@130.0.0:
-    resolution: {integrity: sha512-+ZSOowVv+vGBTueu1Ot9O7EqC0U4PS9l7fUjzc0ThCT4w4g+r78Vgn17q7eGBB5JMu4hxYC1hbbm1U/MCnYFdg==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      google-auth-library: 9.6.3
-      googleapis-common: 7.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color

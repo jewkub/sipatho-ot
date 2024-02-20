@@ -4,7 +4,8 @@ import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import { cwd } from 'process';
 import { authenticate } from '@google-cloud/local-auth';
-import { google } from 'googleapis';
+// import { google } from 'googleapis';
+import { auth } from '@googleapis/oauth2';
 import type { OAuth2Client } from 'google-auth-library';
 
 // If modifying these scopes, delete token.json.
@@ -33,7 +34,7 @@ async function loadSavedCredentialsIfExist() {
     // const content = await fs.readFile(TOKEN_PATH);
     // const credentials = JSON.parse(content.toString());
     const credentials = JSON.parse(GOOGLE_AUTH_TOKEN)
-    return <OAuth2Client> google.auth.fromJSON(credentials);
+    return <OAuth2Client> auth.fromJSON(credentials);
   } catch (err) {
     return null;
   }
@@ -80,7 +81,7 @@ async function authorize() {
 /**
  * Lists the labels in the user's account.
  *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ * @param {OAuth2Client} auth An authorized OAuth2 client.
  *
 async function listLabels(auth) {
   const gmail = google.gmail({version: 'v1', auth});

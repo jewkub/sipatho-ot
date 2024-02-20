@@ -1,11 +1,14 @@
 import { GOOGLE_AUTH_TOKEN, METADATA_SHEET } from '$env/static/private'
 import type { OAuth2Client } from 'google-auth-library'
 // import authorize from '$lib/server/auth.ts'
-import { google } from 'googleapis'
-const auth = <OAuth2Client> google.auth.fromJSON(JSON.parse(GOOGLE_AUTH_TOKEN))
-export const sheets = google.sheets({ version: 'v4', auth }).spreadsheets.values
-export const drive = google.drive({ version: 'v3', auth }).files
-export const docs = google.docs({ version: 'v1', auth }).documents
+import { auth as _auth } from '@googleapis/oauth2'
+const auth = <OAuth2Client> _auth.fromJSON(JSON.parse(GOOGLE_AUTH_TOKEN))
+import { sheets as _sheets } from '@googleapis/sheets'
+export const sheets = _sheets({ version: 'v4', auth }).spreadsheets.values
+import { drive as _drive } from '@googleapis/drive'
+export const drive = _drive({ version: 'v3', auth }).files
+import { docs as _docs } from '@googleapis/docs'
+export const docs = _docs({ version: 'v1', auth }).documents
 
 type NameMap = { [k: string]: [string, string] }
 type Person = [string, string] | null
