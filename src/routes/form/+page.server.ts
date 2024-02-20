@@ -5,5 +5,6 @@ export const load: PageServerLoad = ({ url }) => {
   const hmacToday = getTodayQrHmac()
 	return {
 		validHmac: url.searchParams.get('code') === hmacToday,
+		hmac: url.searchParams.get('code') ?? '',
 	}
 }
