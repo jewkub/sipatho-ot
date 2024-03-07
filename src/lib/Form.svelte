@@ -14,7 +14,7 @@
   const checkTime = (startTime: string, endTime: string, isWeekend: boolean) => {
     if (!startTime || !endTime) return false
     if (parseFloat(endTime) <= parseFloat(startTime)) return false
-    const timeDiff = CalculateTimeDiff(startTime, endTime) as number[]
+    const timeDiff = CalculateTimeDiff(startTime, endTime, isWeekend) as number[]
     if (isWeekend) return timeDiff[0] == 7 ? timeDiff[1] == 0 : timeDiff[0] < 7
     return timeDiff[0] == 4 ? timeDiff[1] == 0 : timeDiff[0] < 4
   }
@@ -36,6 +36,7 @@
 <div class="mx-auto py-4 px-4">
   <form action="/submit" method="post">
     <input class="hidden" value={hmac} readonly name="hmac"/>
+    <input class="hidden" value={jobData.isWeekend} readonly name="isWeekend"/>
     <div class="space-y-12">
       <div class="border-b border-gray-900/10 pb-12 space-y-4">
         <h2 class="text-xl font-bold text-center mb-8">แบบฟอร์มเบิกค่าตอบแทนนอกเวลา</h2>
@@ -101,7 +102,7 @@
           </div>
           {#if startTime && endTime}
             <div class="basis-full md:basis-auto">
-              <p>รวมเวลา {CalculateTimeDiff(startTime, endTime, { format: true })}</p>
+              <p>รวมเวลา {CalculateTimeDiff(startTime, endTime, jobData.isWeekend, { format: true })}</p>
             </div>
           {/if}
         </div>

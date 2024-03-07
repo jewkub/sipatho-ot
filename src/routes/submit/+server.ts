@@ -41,7 +41,7 @@ export const POST: RequestHandler = async ({ request }) => {
         res.fullname,
         res.startTime + ' น.',
         res.endTime + ' น.',
-        CalculateTimeDiff(res.startTime, res.endTime, { format: true }),
+        CalculateTimeDiff(res.startTime, res.endTime, res.isWeekend == 'true', { format: true }),
         res.room,
         roomList[roomNum].work[+res.work][0],
         res.amount,

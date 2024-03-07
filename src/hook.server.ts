@@ -14,10 +14,10 @@ type NameMap = { [k: string]: [string, string] }
 type Person = [string, string] | null
 export type Job = { [k: string]: Person[] }
 
-const [{data: {values: __metadata}}, {data: {values: __nameMap}}] = await Promise.all([
-  sheets.get({ spreadsheetId: METADATA_SHEET, range: 'metadata!A2:B' }),
-  sheets.get({ spreadsheetId: METADATA_SHEET, range: `รายชื่อ!A2:C` }),
-])
+const [{values: __metadata}, {values: __nameMap}] = (await sheets.batchGet({
+  spreadsheetId: METADATA_SHEET,
+  ranges: ['metadata!A2:B', 'รายชื่อ!A2:C']
+})).data.valueRanges!
 
 const _metadata = __metadata?.reduce<{[k: string]: string}>((prev, e) => Object.assign(prev, { [e[0]]: e[1] }), {})
 if (!_metadata) throw 'metadata not found'
@@ -29,12 +29,7 @@ if (![
   _metadata['Response - spreadsheet'],
   _metadata['Response - sheetname'],
   _metadata['Response - oneday'],
-  _metadata['Template - 1'],
-  _metadata['Template - 2'],
-  _metadata['Template - 3'],
-  _metadata['Template - 6'],
-  _metadata['Template - 7'],
-  _metadata['Template - 8'],
+  _metadata['Template'],
 ].every(e => e?.length)) throw 'missing some metadata'
 
 const _nameMap = __nameMap?.reduce<NameMap>((prev, e) => Object.assign<NameMap, NameMap>(prev, { [e[0]]: [e[1], e[2]] }), {})
@@ -44,14 +39,4 @@ export const metadata = _metadata, nameMap = _nameMap
 export const responseSpreadsheet = metadata['Response - spreadsheet']
 export const responseSheetname = metadata['Response - sheetname']
 export const responseOneday = metadata['Response - oneday']
-export const template = [
-  '',
-  metadata['Template - 1'],
-  metadata['Template - 2'],
-  metadata['Template - 3'],
-  '',
-  '',
-  metadata['Template - 6'],
-  metadata['Template - 7'],
-  metadata['Template - 8'],
-]
+export const template = metadata['Template']

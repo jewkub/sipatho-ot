@@ -17,6 +17,8 @@
       end: [...Array(26)].map((_, i) => `${(i>>1)+6}.${(i&1)*3}0`),
     },
   }
+  timeRange.weekend.start.splice(12, 2)
+  timeRange.weekend.end.splice(13, 1)
   let startTimeRange: string[], endTimeRange: string[]
   const job: { [k: string]: [string, string][] } = {}
   // https://stackoverflow.com/a/62118425/4468834

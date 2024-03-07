@@ -11,9 +11,9 @@ export const GET: RequestHandler = async ({ url }) => {
       spreadsheetId: responseSpreadsheet,
       range: `${responseOneday}!A1:L`
     }),
-    docs.get({ documentId: template[templateNum] }),
+    docs.get({ documentId: template }),
     drive.copy({
-      fileId: template[templateNum],
+      fileId: template,
       requestBody: { name: 'e-ใบเบิกค่าตอบแทน' }
     }),
   ])
@@ -29,6 +29,18 @@ export const GET: RequestHandler = async ({ url }) => {
   })
   const updateList: docs_v1.Schema$Request[] = []
   const yesterday = new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
+  updateList.unshift({
+    insertText: {
+      text: templateNum <= 3 ? '4/2563' : '4/2566',
+      location: { index: 222 }
+    }
+  })
+  updateList.unshift({
+    insertText: {
+      text: `(${templateNum})`,
+      location: { index: 237 }
+    }
+  })
   updateList.unshift({
     insertText: {
       text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
@@ -56,14 +68,19 @@ export const GET: RequestHandler = async ({ url }) => {
   let cnt = 0
   data.forEach(row => {
     if (row[11] != templateNum) return ;
-    row.splice(11, 1)
-    row[9] = row[8] && row[9] ? row[8] + ' / ' + row[9] : row[8] + row[9]
-    row[8] = row[10]
-    row.splice(10, 1)
-    row[7] = '1'
-    row.splice(6, 1)
-    row.splice(1, 1)
-    row.forEach((cell, j) => {
+    const data = [
+      row[0],
+      row[2],
+      row[3],
+      row[4],
+      row[3].split(' ')[1],
+      row[5],
+      row[3].split(' ')[1],
+      `${row[6].split(' ')[0]}${row[6].split(' ')[2] ? '.5' : ''}`,
+      row[10],
+      row[8] && row[9] ? row[8] + ' / ' + row[9] : row[8] + row[9],
+    ]
+    data.forEach((cell, j) => {
       if (cell) updateList.unshift({
         insertText: {
           text: cell,
