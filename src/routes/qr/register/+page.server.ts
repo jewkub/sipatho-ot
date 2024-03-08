@@ -11,6 +11,7 @@ import qs from 'qs'
 // }
 export const actions = {
 	default: async ({ cookies, request }) => {
+		if (new Date().getTime() > 1709887985564) redirect(303, '/') // form closed
 		const res = qs.parse(await request.text(), { allowSparse: true })
 		if (typeof res.deviceName !== 'string') throw 'invalid deviceName'
 		console.log(res)
