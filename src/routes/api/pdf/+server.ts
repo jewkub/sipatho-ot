@@ -1,12 +1,11 @@
 import type { RequestHandler } from './$types.d.ts'
-import type { docs_v1 } from '@googleapis/docs'
 import { drive, docs, sheets, responseSpreadsheet, responseOneday, template } from '../../../hook.server.ts'
 import { TIMEZONE } from '$env/static/private'
 
 export const GET: RequestHandler = async ({ url }) => {
   const templateNum = +(url.searchParams.get('template') || 0)
   if (!templateNum) throw 'invalid template'
-  const [{data: {values: data}}, {data: doc}, {data: tempFile}] = await Promise.all([
+  const [{ data: { values: data } }, { data: doc }, { data: tempFile }] = await Promise.all([
     sheets.get({
       spreadsheetId: responseSpreadsheet,
       range: `${responseOneday}!A1:L`
@@ -27,47 +26,36 @@ export const GET: RequestHandler = async ({ url }) => {
       tableIndex[i - 1][j] = cell.content![0].paragraph!.elements![0].startIndex!
     })
   })
-  const updateList: docs_v1.Schema$Request[] = []
   const yesterday = new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
-  updateList.unshift({
-    insertText: {
-      text: templateNum <= 3 ? '4/2563' : '4/2566',
-      location: { index: 222 }
-    }
-  })
-  updateList.unshift({
-    insertText: {
-      text: `(${templateNum})`,
-      location: { index: 237 }
-    }
-  })
-  updateList.unshift({
-    insertText: {
-      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
-      location: { index: doc.body!.content![7].paragraph!.elements![1].startIndex! + 3 }
-    }
-  })
-  updateList.unshift({
-    insertText: {
-      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
-      location: { index: doc.body!.content![7].paragraph!.elements![3].startIndex! + 3 }
-    }
-  })
-  updateList.unshift({
-    insertText: {
-      text: yesterday.toLocaleDateString('th-TH', { month: 'long', timeZone: TIMEZONE }),
-      location: { index: doc.body!.content![7].paragraph!.elements![5].startIndex! + 3 }
-    }
-  })
-  updateList.unshift({
-    insertText: {
+  const insertList = [
+    {
       text: yesterday.toLocaleDateString('th-TH', { year: 'numeric', timeZone: TIMEZONE }).split(' ')[1],
       location: { index: doc.body!.content![7].paragraph!.elements![7].startIndex! + 3 }
-    }
-  })
+    },
+    {
+      text: yesterday.toLocaleDateString('th-TH', { month: 'long', timeZone: TIMEZONE }),
+      location: { index: doc.body!.content![7].paragraph!.elements![5].startIndex! + 3 }
+    },
+    {
+      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
+      location: { index: doc.body!.content![7].paragraph!.elements![3].startIndex! + 3 }
+    },
+    {
+      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
+      location: { index: doc.body!.content![7].paragraph!.elements![1].startIndex! + 3 }
+    },
+    {
+      text: `(${templateNum})`,
+      location: { index: 237 }
+    },
+    {
+      text: templateNum <= 3 ? '4/2563' : '4/2566',
+      location: { index: 222 }
+    },
+  ]
   let cnt = 0
   data.forEach(row => {
-    if (row[11] != templateNum) return ;
+    if (row[11] != templateNum) return;
     const data = [
       row[0],
       row[2],
@@ -76,16 +64,14 @@ export const GET: RequestHandler = async ({ url }) => {
       row[3].split(' ')[1],
       row[5],
       row[3].split(' ')[1],
-      `${row[6].split(' ')[0]}${row[6].split(' ')[2] ? '.5' : ''}`,
+      `${row[6].split(' ')[0] || '0'}${row[6].split(' ')[2] ? '.5' : ''}`,
       row[10],
       row[8] && row[9] ? row[8] + ' / ' + row[9] : row[8] + row[9],
     ]
     data.forEach((cell, j) => {
-      if (cell) updateList.unshift({
-        insertText: {
-          text: cell,
-          location: { index: tableIndex[cnt][j] }
-        }
+      if (cell) insertList.unshift({
+        text: cell,
+        location: { index: tableIndex[cnt][j] }
       })
     })
     cnt++
@@ -94,12 +80,12 @@ export const GET: RequestHandler = async ({ url }) => {
   try {
     await docs.batchUpdate({
       documentId: tempFile.id,
-      requestBody: { requests: updateList },
+      requestBody: { requests: insertList.map(e => ({ insertText: e })) },
     })
     const pdfBlob = (await drive.export({
       fileId: tempFile.id,
       mimeType: 'application/pdf',
-    }, { responseType: 'stream' })).data as unknown as ReadableStream
+    }, { responseType: 'stream' })).data as unknown as ReadableStream // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65542#discussioncomment-6071004
     const today = new Intl.DateTimeFormat('en-GB', {
       timeZone: TIMEZONE,
     }).format().replaceAll('/', '.')

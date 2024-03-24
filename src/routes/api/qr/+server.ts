@@ -21,6 +21,10 @@ const qrRoomList = [
   '94QUvd8psbLEd62lGUCniaBVt4I',
   'f4uv741BQ3QdygziuQwtStgFtq0',
   'Ez3_ID3RdUx_AerkHU2HKZUAiWE',
+  'faMlK-MXAK4vUGkP831HzC4P6oc',
+  'y6aqDJ8iy1hcBNgym3q7tTVzimA',
+  'Og4iy0RUlg3bLnWOuGML0qIsowo',
+  'N-SX9yTBezCZ2eVa6Vg4TY6SGz4',
 ]
 
 const validateId = (id: string) => {
