@@ -1,6 +1,5 @@
 import { GOOGLE_AUTH_TOKEN, METADATA_SHEET } from '$env/static/private'
 import type { OAuth2Client } from 'google-auth-library'
-// import authorize from '$lib/server/auth.ts'
 import { auth as _auth } from '@googleapis/oauth2'
 const auth = <OAuth2Client> _auth.fromJSON(JSON.parse(GOOGLE_AUTH_TOKEN))
 import { sheets as _sheets } from '@googleapis/sheets'
@@ -14,9 +13,9 @@ type NameMap = { [k: string]: [string, string] }
 type Person = [string, string] | null
 export type Job = { [k: string]: Person[] }
 
-const [{values: __metadata}, {values: __nameMap}] = (await sheets.batchGet({
+const [{values: __metadata}, {values: __nameMap}, {values: _qrRoomList}] = (await sheets.batchGet({
   spreadsheetId: METADATA_SHEET,
-  ranges: ['metadata!A2:B', 'รายชื่อ!A2:C']
+  ranges: ['metadata!A2:B', 'รายชื่อ!A2:C', 'รายชื่อห้อง QR Code!A2:B']
 })).data.valueRanges!
 
 const _metadata = __metadata?.reduce<{[k: string]: string}>((prev, e) => Object.assign(prev, { [e[0]]: e[1] }), {})
@@ -30,6 +29,7 @@ if (![
   _metadata['Response - sheetname'],
   _metadata['Response - oneday'],
   _metadata['Template'],
+  _metadata['Open Qr Register'],
 ].every(e => e?.length)) throw 'missing some metadata'
 
 const _nameMap = __nameMap?.reduce<NameMap>((prev, e) => Object.assign<NameMap, NameMap>(prev, { [e[0]]: [e[1], e[2]] }), {})
@@ -40,3 +40,5 @@ export const responseSpreadsheet = metadata['Response - spreadsheet']
 export const responseSheetname = metadata['Response - sheetname']
 export const responseOneday = metadata['Response - oneday']
 export const template = metadata['Template']
+export const openQrRegister = metadata['Open Qr Register'] == 'TRUE'
+export const qrRoomList = _qrRoomList!.map<string>(e => e[0])

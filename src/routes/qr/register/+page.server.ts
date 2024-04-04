@@ -1,17 +1,15 @@
 import { generateRandomId } from '$lib/server/crypto.ts'
 import { responseSpreadsheet, sheets } from '../../../hook.server.ts'
-import type { Actions } from './$types.d.ts'
+import type { Actions, PageServerLoad } from './$types.d.ts'
 import { redirect } from '@sveltejs/kit'
 import qs from 'qs'
+import { openQrRegister } from "../../../hook.server.ts"
 
-// export const POST: RequestHandler = async ({ request }) => {
-//   const res = qs.parse(await request.text(), { allowSparse: true })
-//   console.log(res)
-//   redirect(303, '/done')
-// }
+export const load: PageServerLoad = () => ({ openQrRegister })
+
 export const actions = {
 	default: async ({ cookies, request }) => {
-		if (new Date().getTime() > 1709887985564) redirect(303, '/') // form closed
+		if (!openQrRegister) redirect(303, '/') // form closed
 		const res = qs.parse(await request.text(), { allowSparse: true })
 		if (typeof res.deviceName !== 'string') throw 'invalid deviceName'
 		console.log(res)

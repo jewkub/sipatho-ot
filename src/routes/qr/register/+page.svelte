@@ -1,5 +1,6 @@
 <script lang="ts">
-
+  import type { PageServerData } from "./$types.js";
+  export let data: PageServerData
 </script>
 
 <svelte:head>
@@ -7,7 +8,7 @@
 	<meta name="description" content="ปิดแล้ว - OT Online" />
 </svelte:head>
 
-{#if new Date().getTime() > 1709887985564}
+{#if !data.openQrRegister}
   <h2 class="text-center mt-12 text-xl">
     ฟอร์มปิดแล้ว
   </h2>

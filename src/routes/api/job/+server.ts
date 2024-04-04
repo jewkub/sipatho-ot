@@ -42,7 +42,7 @@ export const GET: RequestHandler = async () => {
     ).catch(() => { throw 'weekday data error' }),
     getJob(
       metadata['Weekend - spreadsheet'],
-      `${metadata['Weekend - sheetname']}!A2:BF`,
+      `${metadata['Weekend - sheetname']}!A2:BG`,
       personPerRoom.weekend,
     ).catch(() => { throw 'weekend data error' }),
   ])
