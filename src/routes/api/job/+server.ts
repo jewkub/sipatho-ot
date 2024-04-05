@@ -1,4 +1,4 @@
-import { TIMEZONE } from '$env/static/private'
+import { PUBLIC_TIMEZONE } from '$env/static/public'
 import type { RequestHandler } from './$types.d.ts'
 import { type Job, sheets, metadata, nameMap } from '../../../hook.server.ts'
 import { personPerRoom, roomList } from '$lib/roomList.ts'
@@ -52,7 +52,7 @@ export const GET: RequestHandler = async () => {
     day: 'numeric',
     month: 'short',
     year: '2-digit',
-    timeZone: TIMEZONE,
+    timeZone: PUBLIC_TIMEZONE,
   }).format(now)
 
   let job = weekday[date]

@@ -1,9 +1,13 @@
 import type { RequestHandler } from './$types.d.ts'
 import { drive, docs, sheets, responseSpreadsheet, responseOneday, template } from '../../../hook.server.ts'
-import { TIMEZONE } from '$env/static/private'
+import { PUBLIC_TIMEZONE } from '$env/static/public'
 
 export const GET: RequestHandler = async ({ url }) => {
+  const yesterday = new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
   const templateNum = +(url.searchParams.get('template') || 0)
+  const day = url.searchParams.get('d') || yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: PUBLIC_TIMEZONE })
+  const month = url.searchParams.get('m') || yesterday.toLocaleDateString('th-TH', { month: 'long', timeZone: PUBLIC_TIMEZONE })
+  const year = url.searchParams.get('y') || yesterday.toLocaleDateString('th-TH', { year: 'numeric', timeZone: PUBLIC_TIMEZONE }).split(' ')[1]
   if (!templateNum) throw 'invalid template'
   const [{ data: { values: data } }, { data: doc }, { data: tempFile }] = await Promise.all([
     sheets.get({
@@ -26,22 +30,21 @@ export const GET: RequestHandler = async ({ url }) => {
       tableIndex[i - 1][j] = cell.content![0].paragraph!.elements![0].startIndex!
     })
   })
-  const yesterday = new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
   const insertList = [
     {
-      text: yesterday.toLocaleDateString('th-TH', { year: 'numeric', timeZone: TIMEZONE }).split(' ')[1],
+      text: year,
       location: { index: doc.body!.content![7].paragraph!.elements![7].startIndex! + 3 }
     },
     {
-      text: yesterday.toLocaleDateString('th-TH', { month: 'long', timeZone: TIMEZONE }),
+      text: month,
       location: { index: doc.body!.content![7].paragraph!.elements![5].startIndex! + 3 }
     },
     {
-      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
+      text: day,
       location: { index: doc.body!.content![7].paragraph!.elements![3].startIndex! + 3 }
     },
     {
-      text: yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: TIMEZONE }),
+      text: day,
       location: { index: doc.body!.content![7].paragraph!.elements![1].startIndex! + 3 }
     },
     {
@@ -87,7 +90,7 @@ export const GET: RequestHandler = async ({ url }) => {
       mimeType: 'application/pdf',
     }, { responseType: 'stream' })).data as unknown as ReadableStream // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65542#discussioncomment-6071004
     const today = new Intl.DateTimeFormat('en-GB', {
-      timeZone: TIMEZONE,
+      timeZone: PUBLIC_TIMEZONE,
     }).format().replaceAll('/', '.')
     const filename = encodeURI(`ใบเบิกค่าตอบแทน-${templateNum}-${today}.pdf`)
     return new Response(pdfBlob, {

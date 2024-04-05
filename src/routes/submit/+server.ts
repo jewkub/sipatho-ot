@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import qs from 'qs'
 import { sheets } from '../../hook.server.ts'
 import { responseSheetname, responseSpreadsheet } from '../../hook.server.ts'
-import { TIMEZONE } from '$env/static/private'
+import { PUBLIC_TIMEZONE } from '$env/static/public'
 import { roomList } from '$lib/roomList.ts'
 import { CalculateTimeDiff } from '$lib/CalculateTimeDiff.ts'
 import { getTodayQrHmac } from '$lib/server/crypto.ts'
@@ -11,7 +11,7 @@ import { getTodayQrHmac } from '$lib/server/crypto.ts'
 const after10pm = () => {
   const formatter = new Intl.DateTimeFormat('en-GB', {
     hour: 'numeric',
-    timeZone: TIMEZONE,
+    timeZone: PUBLIC_TIMEZONE,
   })
   return +formatter.format() >= 22
 }
@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ request }) => {
       values: [[
         new Intl.DateTimeFormat('en-GB', {
           dateStyle: 'short',
-          timeZone: TIMEZONE
+          timeZone: PUBLIC_TIMEZONE
         }).format(),
         new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Bangkok' }),
         res.sap,
