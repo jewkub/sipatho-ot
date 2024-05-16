@@ -13,9 +13,14 @@ type NameMap = { [k: string]: [string, string] }
 type Person = [string, string] | null
 export type Job = { [k: string]: Person[] }
 
-const [{values: __metadata}, {values: __nameMap}, {values: _qrRoomList}] = (await sheets.batchGet({
+const [
+  {values: __metadata},
+  {values: __personPerRoom},
+  {values: __nameMap},
+  {values: _qrRoomList},
+] = (await sheets.batchGet({
   spreadsheetId: METADATA_SHEET,
-  ranges: ['metadata!A2:B', 'รายชื่อ!A2:C', 'รายชื่อห้อง QR Code!A2:B']
+  ranges: ['metadata!A2:B','metadata!E3:F', 'รายชื่อ!A2:C', 'รายชื่อห้อง QR Code!A2:B']
 })).data.valueRanges!
 
 const _metadata = __metadata?.reduce<{[k: string]: string}>((prev, e) => Object.assign(prev, { [e[0]]: e[1] }), {})
@@ -32,10 +37,16 @@ if (![
   _metadata['Open Qr Register'],
 ].every(e => e?.length)) throw 'missing some metadata'
 
+const _personPerRoom = {
+  weekday: __personPerRoom!.map<number>(row => +row[0]),
+  weekend: __personPerRoom!.map<number>(row => +row[1]),
+}
+if (!_personPerRoom) throw 'missing personPerRoom table'
+
 const _nameMap = __nameMap?.reduce<NameMap>((prev, e) => Object.assign<NameMap, NameMap>(prev, { [e[0]]: [e[1], e[2]] }), {})
 if (!_nameMap) throw 'missing name table'
 
-export const metadata = _metadata, nameMap = _nameMap
+export const metadata = _metadata, nameMap = _nameMap, personPerRoom = _personPerRoom
 export const responseSpreadsheet = metadata['Response - spreadsheet']
 export const responseSheetname = metadata['Response - sheetname']
 export const responseOneday = metadata['Response - oneday']

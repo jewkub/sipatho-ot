@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex flex-col min-h-lvh">
-	<header/>
+	<header></header>
 	<main class="flex-1 flex flex-col w-full my-0 mx-auto box-border">
 		<slot/>
 	</main>
