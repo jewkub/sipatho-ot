@@ -8,6 +8,9 @@ export const GET: RequestHandler = async ({ url }) => {
   const day = url.searchParams.get('d') || yesterday.toLocaleDateString('th-TH', { day: 'numeric', timeZone: PUBLIC_TIMEZONE })
   const month = url.searchParams.get('m') || yesterday.toLocaleDateString('th-TH', { month: 'long', timeZone: PUBLIC_TIMEZONE })
   const year = url.searchParams.get('y') || yesterday.toLocaleDateString('th-TH', { year: 'numeric', timeZone: PUBLIC_TIMEZONE }).split(' ')[1]
+  const start = +(url.searchParams.get('start') || 1)
+  const end = +(url.searchParams.get('end') || 99)
+
   if (!templateNum) throw 'invalid template'
   const [{ data: { values: data } }, { data: doc }, { data: tempFile }] = await Promise.all([
     sheets.get({
@@ -57,8 +60,13 @@ export const GET: RequestHandler = async ({ url }) => {
     },
   ]
   let cnt = 0
-  data.forEach(row => {
-    if (row[11] != templateNum) return;
+  for (let row of data) {
+    if (row[11] != templateNum) continue
+    if (cnt + 1 < start) {
+      cnt++
+      continue
+    }
+    if (cnt + 1 > end) break
     const data = [
       row[0],
       row[2],
@@ -74,11 +82,11 @@ export const GET: RequestHandler = async ({ url }) => {
     data.forEach((cell, j) => {
       if (cell) insertList.unshift({
         text: cell,
-        location: { index: tableIndex[cnt][j] }
+        location: { index: tableIndex[cnt - start + 1][j] }
       })
     })
     cnt++
-  })
+  }
 
   try {
     await docs.batchUpdate({
