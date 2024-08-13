@@ -37,12 +37,12 @@ export const GET: RequestHandler = async () => {
   const [weekday, weekend] = await Promise.all([
     getJob(
       metadata['Weekday - spreadsheet'],
-      `${metadata['Weekday - sheetname']}!A2:AZ`,
+      `${metadata['Weekday - sheetname']}!A2:BZ`,
       personPerRoom.weekday,
     ).catch(() => { throw 'weekday data error' }),
     getJob(
       metadata['Weekend - spreadsheet'],
-      `${metadata['Weekend - sheetname']}!A2:BG`,
+      `${metadata['Weekend - sheetname']}!A2:CZ`,
       personPerRoom.weekend,
     ).catch(() => { throw 'weekend data error' }),
   ])
