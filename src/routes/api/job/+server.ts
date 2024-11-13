@@ -1,6 +1,6 @@
 import { PUBLIC_TIMEZONE } from '$env/static/public'
 import type { RequestHandler } from './$types.d.ts'
-import { type Job, sheets, metadata, nameMap, personPerRoom } from '../../../hook.server.ts'
+import { type Job, sheets, metadata, nameMap, personPerRoom, timeRange } from '../../../hook.server.ts'
 import { roomList } from '$lib/roomList.ts'
 
 const getJob = async (spreadsheetId: string, range: string, personPerRoom: number[]) => {
@@ -31,6 +31,7 @@ export type Data = {
   isWeekend: boolean,
   list: string[],
   job: Job,
+  timeRange: typeof timeRange
 }
 
 export const GET: RequestHandler = async () => {
@@ -65,6 +66,7 @@ export const GET: RequestHandler = async () => {
     isWeekend,
     today: new Intl.DateTimeFormat('fr-CA').format(now),
     list: Object.keys(job),
+    timeRange,
   }
 	return new Response(JSON.stringify(output))
 }

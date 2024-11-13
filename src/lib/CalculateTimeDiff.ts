@@ -6,7 +6,8 @@ export const CalculateTimeDiff = (start: string, end: string, isWeekend: boolean
   if (isWeekend && (startHr == 12 || (endHr == 12 && end30))) throw 'time range invalid'
   if (endHr < startHr) throw 'time range invalid'
   if (endHr == startHr && !end30 && start30) throw 'time range invalid'
-  const resultHr = endHr - startHr - (+(!end30 && start30)) - (+(startHr < 12 && endHr > 13))
+  const resultHr = endHr - startHr - (+(!end30 && start30)) - (+(startHr < 12 && endHr >= 13))
+  // if (isWeekend && startHr < 12 && endHr > 12) resultHr-- // ลบชั่วโมงเที่ยง
   if (options?.format) return `${resultHr ? resultHr + ' ชั่วโมง' : ''}${end30 != start30 ? ' 30 นาที' : ''}`
   return [resultHr, end30 != start30 ? 30 : 0]
 }

@@ -16,11 +16,18 @@ export type Job = { [k: string]: Person[] }
 const [
   {values: __metadata},
   {values: __personPerRoom},
+  {values: _timeRange},
   {values: __nameMap},
   {values: _qrRoomList},
 ] = (await sheets.batchGet({
   spreadsheetId: METADATA_SHEET,
-  ranges: ['metadata!A2:B','metadata!E3:F', 'รายชื่อ!A2:C', 'รายชื่อห้อง QR Code!A2:B']
+  ranges: [
+    'metadata!A2:B',
+    'metadata!E3:F',
+    'metadata!H3:K',
+    'รายชื่อ!A2:C',
+    'รายชื่อห้อง QR Code!A2:B',
+  ]
 })).data.valueRanges!
 
 const _metadata = __metadata?.reduce<{[k: string]: string}>((prev, e) => Object.assign(prev, { [e[0]]: e[1] }), {})
@@ -42,6 +49,17 @@ const _personPerRoom = {
   weekend: __personPerRoom!.map<number>(row => +row[1]),
 }
 if (!_personPerRoom) throw 'missing personPerRoom table'
+
+export const timeRange = {
+  weekday: {
+    start: _timeRange!.flatMap<string>(row => row[0] || []),
+    end: _timeRange!.flatMap<string>(row => row[1] || []),
+  },
+  weekend: {
+    start: _timeRange!.flatMap<string>(row => row[2] || []),
+    end: _timeRange!.flatMap<string>(row => row[3] || []),
+  }
+}
 
 const _nameMap = __nameMap?.reduce<NameMap>((prev, e) => Object.assign<NameMap, NameMap>(prev, { [e[0]]: [e[1], e[2]] }), {})
 if (!_nameMap) throw 'missing name table'
